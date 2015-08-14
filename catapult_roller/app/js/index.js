@@ -40,6 +40,21 @@ function check_server_creds(){
 };
 
 window.playSound = function(soundName){
+    var conf = configuration.readSettings('api_config');
+    console.log(util.inspect(conf));
+    var sound = null;
+    if (conf){    
+	sound = conf['sound'];
+	if (sound){
+	    if (sound == false) return;
+	}else{
+	    return;
+	}				    
+    }else{
+	return;
+    }
+
+    console.log("Playing Sound.. "+soundName);
     var audio = new Audio(__dirname + '/wav/' + soundName + '.wav');
     audio.currentTime = 0;
     audio.play();
@@ -71,6 +86,7 @@ window.ondrop = function (e) {
 };
 
 dateEntry.addEventListener('click', function () {
+    window.playSound("ba-dum-tsss")
     ipc.send('open-date-window');
 });
 
@@ -83,6 +99,7 @@ listEnrolments.addEventListener('click', function () {
   var config = configuration.readSettings('date_config');
   if (config == null){
       alert("Please specify a date range and filter");
+      window.playSound("crowd-laughing");
       return;
   }
   var startDate = config['startDate'];
@@ -90,6 +107,7 @@ listEnrolments.addEventListener('click', function () {
   var filter    = config['filter'];
   if (startDate == null || endDate == null || filter == null){
       alert("Please specify a date range and filter");
+      window.playSound("crowd-laughing");
       return;
   }
   var ok = confirm("Retrieve \""+filter+"\" enrolments from:\n"+
@@ -111,6 +129,7 @@ closeEl.addEventListener('click', function () {
 });
 
 settingsEl.addEventListener('click', function () {
+    window.playSound("applause");
     ipc.send('open-settings-window');
 });
 if (process.platform === 'darwin') {
